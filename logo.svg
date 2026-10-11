@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="2000" height="1120">
+  <!-- موجة صوتية ونوتة فوق الشعار -->
+  <g fill="none" stroke="#121212" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M380 92 H440 L454 70 L468 112 L482 56 L496 118 L510 84 L520 92 H612" stroke-width="5"/>
+    <path d="M606 60 V92" stroke-width="5"/>
+    <path d="M606 60 q24 12 18 36" stroke-width="5"/>
+  </g>
+  <ellipse cx="600" cy="92" rx="13" ry="10" fill="#121212"/>
+
+  <!-- ألحان (اليمين) -->
+  <text x="600" y="300" text-anchor="start" font-family="Amiri" font-weight="700" font-size="150" fill="#121212">ألحان</text>
+
+  <!-- العود بين الكلمتين -->
+  <g fill="#121212">
+    <path d="M500 214 C526 214 538 232 535 254 C533 268 544 278 548 298 C554 332 530 344 500 344 C470 344 446 332 452 298 C456 278 467 268 465 254 C462 232 474 214 500 214 Z"/>
+    <rect x="493" y="120" width="14" height="100"/>
+    <rect x="484" y="108" width="32" height="24" rx="4"/>
+  </g>
+  <circle cx="500" cy="266" r="14" fill="#FDFDFC"/>
+  <circle cx="500" cy="266" r="7" fill="#121212"/>
+
+  <!-- الخليج (اليسار) -->
+  <text x="400" y="300" text-anchor="end" font-family="Amiri" font-weight="700" font-size="150" fill="#121212">الخليج</text>
+
+  <!-- فاصل -->
+  <path d="M140 392 H860" stroke="#121212" stroke-width="3"/>
+  <path d="M500 380 L512 392 L500 404 L488 392 Z" fill="#121212"/>
+
+  <!-- العبارة -->
+  <text x="500" y="492" text-anchor="middle" font-family="IBM Plex Sans Arabic" font-weight="500" font-size="54" letter-spacing="2" fill="#121212">استوديو الزفات والشيلات</text>
+</svg>
