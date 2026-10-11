@@ -1,0 +1,625 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex" />
+  <title>لوحة إدارة ألحان الخليج</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body { background: #f5f5f3; }
+    .adm { max-width: 1180px; margin: 0 auto; padding: 22px 14px 60px; }
+    .adm-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 16px; }
+    .adm-head h1 { font-family: "Amiri", serif; font-size: 1.7rem; margin: 0; }
+    .adm-head .links { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+    .card { background: var(--white); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin-bottom: 18px; }
+    .card h2 { font-size: 1.2rem; margin: 0 0 12px; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .grid2 .full { grid-column: 1 / -1; }
+    .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    label.f { display: grid; gap: 4px; font-size: .9rem; font-weight: 600; min-width: 0; }
+    label.check { display: flex; gap: 8px; align-items: center; font-size: .95rem; font-weight: 600; }
+    label.check input { width: auto; }
+    input, select, textarea { font: inherit; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--white); color: var(--ink); width: 100%; min-width: 0; }
+    textarea { min-height: 70px; resize: vertical; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--ink); }
+    input:disabled, select:disabled { background: var(--soft); color: var(--muted); }
+    .tabs { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+    .tabs button { border: 1px solid var(--ink); background: var(--white); padding: 8px 14px; border-radius: 999px; font: inherit; font-weight: 600; cursor: pointer; font-size: .92rem; }
+    .tabs button.on { background: var(--ink); color: var(--white); }
+    .msg { margin-top: 10px; font-size: .95rem; min-height: 1.4em; }
+    .msg.err { color: var(--red); } .msg.ok { color: var(--wa-dark); }
+    .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+    .btn-a { padding: 9px 16px; border-radius: 999px; font: inherit; font-weight: 600; cursor: pointer; border: 1px solid var(--ink); background: var(--white); color: var(--ink); }
+    .btn-ink { background: var(--ink); color: var(--white); }
+    .btn-ink:disabled { opacity: .5; cursor: wait; }
+    .btn-small { padding: 5px 11px; font-size: .85rem; }
+    table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+    th, td { padding: 9px 8px; border-bottom: 1px solid var(--line); text-align: right; vertical-align: middle; }
+    th { color: var(--muted); font-weight: 600; font-size: .85rem; white-space: nowrap; }
+    td.nw { white-space: nowrap; }
+    .wrap { overflow-x: auto; }
+    .thumb { width: 56px; height: 40px; object-fit: cover; border-radius: 6px; background: var(--ink); display: block; }
+    .price-in { width: 110px; padding: 6px 8px; }
+    .price-in.saved { border-color: var(--wa-dark); }
+    .del { background: #fff; border: 1px solid var(--red); color: var(--red); padding: 5px 10px; border-radius: 8px; font: inherit; cursor: pointer; font-size: .85rem; }
+    .edit { background: #fff; border: 1px solid var(--ink); padding: 5px 10px; border-radius: 8px; font: inherit; cursor: pointer; font-size: .85rem; }
+    .hint { color: var(--muted); font-size: .85rem; margin: 4px 0 0; }
+    .preview { display: flex; gap: 8px; align-items: center; font-size: .85rem; color: var(--muted); margin-top: 4px; }
+    .preview img { width: 64px; height: 44px; object-fit: cover; border-radius: 6px; }
+    .banner { background: #fff4e5; border: 1px solid #f0b35c; padding: 12px 14px; border-radius: 10px; margin-bottom: 14px; display: none; }
+    .banner.show { display: block; }
+    .editing { border-color: var(--ink) !important; box-shadow: 0 0 0 3px rgba(18,18,18,.08); }
+    .badge { display: inline-block; font-size: .78rem; padding: 2px 9px; border-radius: 999px; background: var(--soft); border: 1px solid var(--line); }
+    .hidden { display: none !important; }
+    .muted { color: var(--muted); }
+    @media (max-width: 760px) { .grid2, .grid3 { grid-template-columns: 1fr; } .adm { padding: 16px 10px 50px; } }
+  </style>
+</head>
+<body>
+  <main class="adm">
+    <div class="adm-head">
+      <div>
+        <h1>لوحة إدارة ألحان الخليج</h1>
+        <div class="links"><a href="index.html" target="_blank" rel="noopener">معاينة الموقع ↗</a><span class="muted" id="whoLine"></span></div>
+      </div>
+      <button class="btn-a btn-ink hidden" id="logoutBtn" type="button">تسجيل الخروج</button>
+    </div>
+
+    <div class="banner" id="serverBanner" role="alert"></div>
+
+    <!-- تسجيل الدخول -->
+    <section class="card" id="loginCard" style="max-width:420px">
+      <h2>تسجيل الدخول</h2>
+      <form id="loginForm" novalidate>
+        <label class="f">كلمة المرور
+          <input type="password" id="adminPass" autocomplete="current-password" />
+        </label>
+        <p class="hint">كلمة المرور تُحدَّد عند تشغيل الخادم بالمتغير ADMIN_PASSWORD (الافتراضية alhan2026، غيّرها قبل النشر).</p>
+        <div class="btn-row"><button class="btn-a btn-ink" type="submit">دخول</button></div>
+        <div class="msg" id="loginMsg" role="alert"></div>
+      </form>
+    </section>
+
+    <div id="app" class="hidden">
+      <nav class="tabs" role="tablist" id="tabs"></nav>
+      <div id="panels"></div>
+    </div>
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+    var TOKEN_KEY = "nh_admin_token";
+    var S = { token: sessionStorage.getItem(TOKEN_KEY) || "", data: null };
+    var $ = function (s, r) { return (r || document).querySelector(s); };
+    var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+    var esc = function (s) { return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) { return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]; }); };
+    var STATUS = { received: "تم الاستلام", reviewing: "قيد المراجعة", in_progress: "قيد التنفيذ", delivered: "تم التسليم", cancelled: "ملغي" };
+    var TYPE = { image: "صورة", audio: "صوت", video: "فيديو" };
+    var ACCEPT = { image: "image/jpeg,image/png,image/webp,image/gif", audio: ".mp3,.wav,.ogg,.m4a,.aac,audio/*", video: ".mp4,.webm,video/mp4,video/webm" };
+    var MAX = 30 * 1024 * 1024;
+    var NOT_SERVER = "هذه الصفحة لم تُفتح من خادم الموقع. افتح لوحة الإدارة من رابط الموقع المباشر (…/admin.html) الذي يعمل عليه الخادم، وليس من عارض الملفات.";
+
+    /* ---------- طبقة الاتصال ---------- */
+    function api(path, opts) {
+      opts = opts || {};
+      var init = { method: opts.method || "GET", headers: {}, cache: "no-store" };
+      if (S.token) init.headers["X-Admin-Token"] = S.token;
+      if (opts.body !== undefined) { init.headers["Content-Type"] = "application/json"; init.body = JSON.stringify(opts.body); }
+      return fetch(path, init).then(function (r) {
+        var isJson = (r.headers.get("content-type") || "").indexOf("application/json") !== -1;
+        if (!isJson) throw new Error(r.status === 405 || r.status === 404 ? NOT_SERVER : "استجابة غير متوقعة من الخادم (" + r.status + ")");
+        return r.json().then(function (d) {
+          if (r.status === 401 && path !== "/api/admin/login") { logout("انتهت الجلسة، سجّل الدخول مجدداً"); throw new Error("انتهت الجلسة"); }
+          if (!r.ok || d.ok === false) throw new Error(d.error || ("خطأ " + r.status));
+          return d;
+        });
+      }, function () { throw new Error("تعذّر الاتصال بالخادم. تأكد من أن الخادم يعمل وأن الصفحة مفتوحة من عنوانه."); });
+    }
+    function setMsg(el, text, ok) { if (!el) return; el.textContent = text || ""; el.className = "msg" + (text ? (ok ? " ok" : " err") : ""); }
+    function readFile(file) {
+      return new Promise(function (resolve, reject) {
+        if (file.size > MAX) { reject(new Error("حجم الملف يتجاوز 30 ميغابايت")); return; }
+        var r = new FileReader();
+        r.onload = function () { resolve(r.result); };
+        r.onerror = function () { reject(new Error("تعذّرت قراءة الملف")); };
+        r.readAsDataURL(file);
+      });
+    }
+
+    /* ---------- تعريف الأقسام (يطابق قواعد الخادم) ---------- */
+    var COLS = {
+      artists: { title: "الفنانون والأصوات", endpoint: "artists", list: "artists", label: "فنان",
+        fields: [
+          { k: "name", t: "text", label: "الاسم *", max: 80 },
+          { k: "initials", t: "text", label: "الاختصار (يظهر إن لم توجد صورة)", max: 8 },
+          { k: "bio", t: "textarea", label: "نبذة قصيرة", full: true, max: 400 },
+          { k: "photo", t: "image", label: "صورة شخصية", full: true },
+          { k: "featured", t: "bool", label: "كبار الفنانين (يظهر في القسم المميز أولاً)" }
+        ],
+        cols: [{ k: "photo", t: "thumb" }, { k: "name", t: "text" }, { k: "initials", t: "text" }, { k: "featured", t: "yesno", label: "كبير الفنانين" }] },
+      products: { title: "المنتجات والأسعار", endpoint: "products", list: "products", label: "منتج",
+        fields: [
+          { k: "title", t: "text", label: "عنوان المنتج *", full: true, max: 140 },
+          { k: "cat", t: "select", label: "القسم *", src: "menu" },
+          { k: "artist", t: "select", label: "المنشد", src: "artists" },
+          { k: "price", t: "number", label: "السعر (ريال) *", min: 0, max: 100000 },
+          { k: "oldPrice", t: "number", label: "السعر قبل الخصم (0 = بدون خصم)", min: 0, max: 100000 },
+          { k: "duration", t: "text", label: "المدة (مثل 02:30)", max: 8, placeholder: "02:30" },
+          { k: "sales", t: "number", label: "عدد الطلبات", min: 0, max: 10000000 },
+          { k: "tags", t: "tags", label: "وسوم (مفصولة بفاصلة)", placeholder: "الأكثر طلباً، جديد" },
+          { k: "isNew", t: "bool", label: "عرض في قسم الجديد" },
+          { k: "img", t: "image", label: "صورة المنتج (تظهر بدل الخلفية الملونة)", full: true }
+        ],
+        cols: [{ k: "img", t: "thumb" }, { k: "title", t: "text" }, { k: "cat", t: "cat" }, { k: "artist", t: "artist" },
+          { k: "price", t: "inline", label: "السعر" }, { k: "oldPrice", t: "inline", label: "قبل الخصم" }, { k: "sales", t: "text" }] },
+      packages: { title: "الباقات", endpoint: "packages", list: "packages", label: "باقة",
+        fields: [
+          { k: "name", t: "text", label: "اسم الباقة *", max: 60 },
+          { k: "price", t: "number", label: "السعر (ريال) *", min: 0, max: 100000 },
+          { k: "desc", t: "textarea", label: "وصف الباقة", full: true, max: 300 },
+          { k: "features", t: "lines", label: "المميزات (سطر لكل ميزة)", full: true },
+          { k: "popular", t: "bool", label: "تمييز: الأكثر طلباً" }
+        ],
+        cols: [{ k: "name", t: "text" }, { k: "price", t: "inline", label: "السعر" }, { k: "popular", t: "yesno" }] },
+      addons: { title: "الإضافات", endpoint: "addons", list: "addons", label: "إضافة",
+        fields: [
+          { k: "label", t: "text", label: "اسم الإضافة *", max: 100 },
+          { k: "price", t: "number", label: "السعر (ريال) *", min: 0, max: 100000 }
+        ],
+        cols: [{ k: "label", t: "text" }, { k: "price", t: "inline", label: "السعر" }] },
+      occasions: { title: "المناسبات", endpoint: "occasions", list: "occasions", label: "مناسبة",
+        fields: [
+          { k: "label", t: "text", label: "اسم المناسبة *", max: 60 },
+          { k: "img", t: "image", label: "صورة البطاقة", full: true }
+        ],
+        cols: [{ k: "img", t: "thumb" }, { k: "label", t: "text" }] },
+      reviews: { title: "التقييمات (تظهر في الموقع بعد الاعتماد فقط)", endpoint: "reviews", list: "reviews", label: "تقييم",
+        fields: [
+          { k: "name", t: "text", label: "اسم العميل *", max: 60 },
+          { k: "role", t: "text", label: "الصفة (مثل: أب العروس)", max: 60 },
+          { k: "stars", t: "number", label: "عدد النجوم (1 إلى 5) *", min: 1, max: 5 },
+          { k: "status", t: "select", label: "الحالة (فارغ = بانتظار المراجعة)", src: "reviewStatus" },
+          { k: "verified", t: "bool", label: "طلب موثّق (تم التحقق من طلب مُسلَّم)" },
+          { k: "text", t: "textarea", label: "نص التقييم *", full: true, max: 500 }
+        ],
+        cols: [{ k: "status", t: "status" }, { k: "name", t: "text" }, { k: "stars", t: "text" }, { k: "verified", t: "yesno", label: "موثّق" }, { k: "text", t: "text" }] },
+      faqs: { title: "الأسئلة الشائعة", endpoint: "faqs", list: "faqs", label: "سؤال",
+        fields: [
+          { k: "q", t: "text", label: "السؤال *", full: true, max: 200 },
+          { k: "a", t: "textarea", label: "الجواب *", full: true, max: 1000 }
+        ],
+        cols: [{ k: "q", t: "text" }, { k: "a", t: "text" }] },
+      works: { title: "أعمالنا (صور وصوت وفيديو)", endpoint: "works", list: "works", label: "عمل",
+        fields: [
+          { k: "title", t: "text", label: "عنوان العمل *", full: true, max: 120 },
+          { k: "type", t: "select", label: "نوع العمل *", src: "types" },
+          { k: "artist", t: "select", label: "المنشد / الصوت", src: "artists" },
+          { k: "occasion", t: "select", label: "المناسبة", src: "occasions" },
+          { k: "description", t: "textarea", label: "وصف قصير", full: true, max: 400 },
+          { k: "file", t: "media", label: "الملف (مطلوب عند الإضافة، واختياري عند التعديل)", full: true },
+          { k: "cover", t: "image", label: "صورة غلاف (اختيارية، للصوت والفيديو)", full: true }
+        ],
+        cols: [{ k: "preview", t: "preview" }, { k: "title", t: "text" }, { k: "type", t: "type" }, { k: "artist", t: "artist" }, { k: "occasion", t: "occ" }, { k: "stats", t: "stats" }] }
+    };
+    var ORDER = ["orders", "works", "artists", "products", "packages", "addons", "occasions", "reviews", "faqs", "settings", "help"];
+    var LABELS = { orders: "الطلبات", works: "أعمالنا", artists: "الفنانون", products: "المنتجات والأسعار", packages: "الباقات", addons: "الإضافات", occasions: "المناسبات", reviews: "التقييمات", faqs: "الأسئلة", settings: "الإعدادات", help: "شرح الاستخدام" };
+    var UI = {};
+
+    /* ---------- مساعدات البيانات ---------- */
+    function byId(list, id) { for (var i = 0; list && i < list.length; i++) if (list[i].id === id) return list[i]; return null; }
+    function nameOf(list, id, field) { var x = byId(list, id); return x ? x[field] : ""; }
+    function options(src) {
+      var d = S.data || {};
+      if (src === "artists") return (d.artists || []).map(function (a) { return { v: a.id, l: a.name }; });
+      if (src === "occasions") return (d.occasions || []).map(function (o) { return { v: o.id, l: o.label }; });
+      if (src === "reviewStatus") return [{ v: "pending", l: "بانتظار المراجعة" }, { v: "approved", l: "معتمد (يظهر في الموقع)" }, { v: "rejected", l: "مرفوض (مخفي)" }];
+      if (src === "types") return [{ v: "image", l: "صورة" }, { v: "audio", l: "مقطع صوتي" }, { v: "video", l: "فيديو" }];
+      if (src === "menu") {
+        var out = [], m = d.menu || {};
+        [["shilat", "شيلات"], ["zaffat", "زفات"], ["tunes", "ألحان الشيلات"]].forEach(function (g) {
+          (m[g[0]] || []).forEach(function (c) { out.push({ v: c.id, l: g[1] + " — " + c.label }); });
+        });
+        return out;
+      }
+      return [];
+    }
+    function menuLabel(id) {
+      var m = (S.data && S.data.menu) || {}, found = "";
+      ["shilat", "zaffat", "tunes"].forEach(function (g) { (m[g] || []).forEach(function (c) { if (c.id === id) found = c.label; }); });
+      return found || id || "";
+    }
+    function occLabel(id) { return nameOf(S.data && S.data.occasions, id, "label") || "—"; }
+    function artistLabel(id) { return nameOf(S.data && S.data.artists, id, "name") || "—"; }
+
+    /* ---------- بناء الأقسام ---------- */
+    function fieldHTML(key, f) {
+      var id = "f_" + key + "_" + f.k;
+      var cls = "f" + (f.full ? " full" : "");
+      var ph = f.placeholder ? ' placeholder="' + esc(f.placeholder) + '"' : "";
+      var nm = ' name="' + f.k + '" id="' + id + '"';
+      if (f.t === "bool") return '<label class="check full-check"><input type="checkbox"' + nm + ' /> ' + esc(f.label) + '</label>';
+      var input;
+      if (f.t === "textarea" || f.t === "lines") input = '<textarea' + nm + (f.max ? ' maxlength="' + f.max + '"' : "") + '></textarea>';
+      else if (f.t === "select") input = '<select' + nm + ' data-src="' + f.src + '"><option value="">— اختر —</option></select>';
+      else if (f.t === "number") input = '<input type="number" step="any" inputmode="decimal"' + nm + (f.min != null ? ' min="' + f.min + '"' : "") + (f.max != null ? ' max="' + f.max + '"' : "") + ' />';
+      else if (f.t === "image") return '<label class="' + cls + '">' + esc(f.label) + '<input type="file" accept="image/jpeg,image/png,image/webp,image/gif"' + nm + ' /><span class="preview" data-preview="' + f.k + '"></span></label>';
+      else if (f.t === "media") return '<label class="' + cls + '">' + esc(f.label) + '<input type="file"' + nm + ' data-media="1" /><span class="preview" data-preview="' + f.k + '"></span></label>';
+      else input = '<input type="text"' + nm + (f.max ? ' maxlength="' + f.max + '"' : "") + ph + ' />';
+      return '<label class="' + cls + '">' + esc(f.label) + input + '</label>';
+    }
+    function buildPanel(key) {
+      var cfg = COLS[key];
+      var wrap = document.createElement("div");
+      wrap.innerHTML =
+        '<section class="card hidden" data-panel="' + key + '">' +
+          '<h2 data-formtitle>إضافة ' + esc(cfg.label) + ' جديد</h2>' +
+          '<form novalidate data-form>' +
+            '<div class="grid2">' + cfg.fields.map(function (f) { return fieldHTML(key, f); }).join("") + '</div>' +
+            '<div class="btn-row">' +
+              '<button class="btn-a btn-ink" type="submit" data-save>إضافة</button>' +
+              '<button class="btn-a" type="button" data-cancel hidden>إلغاء التعديل</button>' +
+            '</div>' +
+            '<div class="msg" role="status" data-msg></div>' +
+          '</form>' +
+        '</section>' +
+        '<section class="card hidden" data-panel="' + key + '">' +
+          '<h2>' + esc(cfg.title) + ' <span class="badge" data-count>0</span></h2>' +
+          '<div class="wrap"><table><thead><tr>' +
+            cfg.cols.map(function (c) { return '<th>' + esc(c.label || headLabel(c)) + '</th>'; }).join("") +
+            '<th>إجراءات</th></tr></thead><tbody data-body></tbody></table></div>' +
+          '<div class="msg" data-listmsg role="status"></div>' +
+        '</section>';
+      var nodes = Array.prototype.slice.call(wrap.children);
+      UI[key] = { form: nodes[0].querySelector("[data-form]"), title: nodes[0].querySelector("[data-formtitle]"), save: nodes[0].querySelector("[data-save]"),
+        cancel: nodes[0].querySelector("[data-cancel]"), msg: nodes[0].querySelector("[data-msg]"), body: nodes[1].querySelector("[data-body]"),
+        count: nodes[1].querySelector("[data-count]"), listmsg: nodes[1].querySelector("[data-listmsg]"), editId: "" };
+      return nodes;
+    }
+    function headLabel(c) {
+      return { photo: "صورة", img: "صورة", title: "العنوان", name: "الاسم", initials: "الاختصار", price: "السعر", label: "الاسم", q: "السؤال", a: "الجواب", text: "النص", stars: "النجوم", sales: "الطلبات", cat: "القسم", artist: "المنشد", popular: "تمييز", preview: "المعاينة", type: "النوع", occasion: "المناسبة", stats: "إعجابات / مشاهدات", oldPrice: "قبل الخصم", role: "الصفة" }[c.k] || c.k;
+    }
+
+    function renderTable(key) {
+      var cfg = COLS[key], ui = UI[key], list = (S.data && S.data[cfg.list]) || [];
+      ui.count.textContent = list.length;
+      ui.body.innerHTML = list.map(function (r) {
+        var cells = cfg.cols.map(function (c) {
+          var v = r[c.k];
+          if (c.t === "thumb") return '<td>' + (v ? '<img class="thumb" src="' + esc(v) + '" alt="" />' : '<span class="thumb"></span>') + '</td>';
+          if (c.t === "inline") return '<td class="nw"><input type="number" class="price-in" min="0" step="any" value="' + esc(r[c.k] || 0) + '" data-inline="' + c.k + '" data-id="' + esc(r.id) + '" aria-label="' + esc(c.label) + '" /></td>';
+          if (c.t === "cat") return '<td>' + esc(menuLabel(v)) + '</td>';
+          if (c.t === "artist") return '<td>' + esc(artistLabel(v)) + '</td>';
+          if (c.t === "occ") return '<td>' + esc(occLabel(v)) + '</td>';
+          if (c.t === "yesno") return '<td>' + (v ? "نعم" : "لا") + '</td>';
+          if (c.t === "status") { var SL = { pending: "بانتظار المراجعة", approved: "معتمد", rejected: "مرفوض" }; return '<td><span class="badge">' + (SL[v] || v) + '</span></td>'; }
+          if (c.t === "type") return '<td>' + (TYPE[v] || v) + '</td>';
+          if (c.t === "preview") return '<td>' + (v === "image" ? '' : '') + (r.cover || (r.type === "image" ? r.src : "") ? '<img class="thumb" src="' + esc(r.cover || r.src) + '" alt="" />' : '<span class="thumb"></span>') + '</td>';
+          if (c.t === "stats") return '<td class="nw">' + (r.likes || 0) + ' / ' + (r.plays || 0) + '</td>';
+          var txt = Array.isArray(v) ? v.join("، ") : (v == null ? "" : String(v));
+          if (c.k === "text" || c.k === "a") txt = txt.length > 90 ? txt.slice(0, 90) + "…" : txt;
+          return '<td>' + esc(txt) + '</td>';
+        }).join("");
+        var approve = (key === "reviews" && r.status !== "approved") ? '<button class="edit" type="button" data-approve="' + esc(r.id) + '">اعتماد</button> ' : "";
+        return '<tr>' + cells + '<td class="nw">' + approve + '<button class="edit" type="button" data-edit="' + esc(key) + '" data-id="' + esc(r.id) + '">تعديل</button> ' +
+          '<button class="del" type="button" data-del="' + esc(key) + '" data-id="' + esc(r.id) + '">حذف</button></td></tr>';
+      }).join("") || '<tr><td colspan="' + (cfg.cols.length + 1) + '" class="muted">لا توجد عناصر بعد.</td></tr>';
+    }
+    function refreshSelects(key) {
+      var form = UI[key].form;
+      $$("select[data-src]", form).forEach(function (sel) {
+        var keep = sel.value;
+        var opts = options(sel.getAttribute("data-src"));
+        sel.innerHTML = '<option value="">— اختر —</option>' + opts.map(function (o) { return '<option value="' + esc(o.v) + '">' + esc(o.l) + '</option>'; }).join("");
+        sel.value = keep;
+      });
+    }
+
+    /* ---------- الطلبات ---------- */
+    function buildOrdersPanel() {
+      var el = document.createElement("div");
+      el.innerHTML = '<section class="card hidden" data-panel="orders"><h2>الطلبات الواردة <span class="badge" data-ocount>0</span></h2>' +
+        '<div class="wrap"><table><thead><tr><th>رقم الطلب</th><th>التاريخ</th><th>العميل</th><th>الأسماء</th><th>المناسبة</th><th>الإجمالي (ريال)</th><th>الحالة</th></tr></thead><tbody id="ordersBody"></tbody></table></div>' +
+        '<p class="hint" id="ordersEmpty"></p><div class="msg" id="ordersMsg" role="status"></div></section>';
+      return el.firstChild;
+    }
+    function renderOrders() {
+      var d = S.data;
+      $("[data-ocount]").textContent = d.orders.length;
+      $("#ordersBody").innerHTML = d.orders.map(function (o) {
+        var v = o.values || {};
+        var opts = Object.keys(STATUS).map(function (k) { return '<option value="' + k + '"' + (k === o.status ? ' selected' : '') + '>' + STATUS[k] + '</option>'; }).join("");
+        return '<tr><td dir="ltr" class="nw">' + esc(o.id) + '</td><td class="nw">' + esc(new Date(o.createdAt).toLocaleString("ar-SA")) + '</td>' +
+          '<td>' + esc(v.customerName || (o.kind === "cart" ? "طلب من السلة" : "—")) + '<br><small dir="ltr">' + esc(v.phone || "") + '</small></td>' +
+          '<td>' + esc(v.names || "—") + '</td><td>' + esc(occLabel(v.occasion)) + '</td><td>' + esc(o.total) + '</td>' +
+          '<td><select data-status="' + esc(o.id) + '" aria-label="حالة الطلب">' + opts + '</select></td></tr>';
+      }).join("");
+      $("#ordersEmpty").textContent = d.orders.length ? "" : "لا توجد طلبات بعد.";
+    }
+
+    /* ---------- الإعدادات ---------- */
+    function buildSettingsPanel() {
+      var el = document.createElement("div");
+      el.innerHTML = '<section class="card hidden" data-panel="settings"><h2>إعدادات عامة</h2>' +
+        '<form novalidate id="settingsForm"><div class="grid2">' +
+        '<label class="f full">رقم واتساب لاستقبال الطلبات (بصيغة دولية بدون + ومسافات، مثل 967779000996)<input type="text" name="whatsapp" inputmode="numeric" /></label>' +
+        '<label class="f">مدة التسليم القياسي (ساعة)<input type="number" name="standardHours" min="1" max="720" /></label>' +
+        '<label class="f">مدة التسليم العاجل (ساعة)<input type="number" name="expressHours" min="1" max="720" /></label>' +
+        '</div><h3 style="margin:22px 0 6px">روابط التواصل الاجتماعي</h3><p class="hint" style="margin-top:0">اتركها فارغة لإخفاء الرابط من الموقع. يجب أن تبدأ الروابط بـ https://</p>' +
+        '<div class="grid2">' +
+        '<label class="f">إنستغرام<input type="url" name="social_instagram" placeholder="https://instagram.com/..." /></label>' +
+        '<label class="f">تيك توك<input type="url" name="social_tiktok" placeholder="https://www.tiktok.com/@..." /></label>' +
+        '<label class="f">سناب شات<input type="url" name="social_snapchat" placeholder="https://www.snapchat.com/add/..." /></label>' +
+        '<label class="f">يوتيوب<input type="url" name="social_youtube" placeholder="https://www.youtube.com/@..." /></label>' +
+        '<label class="f">منصة X<input type="url" name="social_x" placeholder="https://x.com/..." /></label>' +
+        '<label class="f">فيسبوك<input type="url" name="social_facebook" placeholder="https://www.facebook.com/..." /></label>' +
+        '</div><div class="btn-row"><button class="btn-a btn-ink" type="submit">حفظ الإعدادات</button></div>' +
+        '<div class="msg" id="settingsMsg" role="status"></div></form>' +
+        '<p class="hint">تظهر التغييرات في الموقع عند تحديث الصفحة. الرقم يُستخدم لزر واتساب العائم وصفحة التواصل وكل رسائل الطلبات.</p>' +
+        '<h2 style="margin-top:30px">تغيير كلمة المرور</h2>' +
+        '<form novalidate id="passForm"><div class="grid2">' +
+        '<label class="f">كلمة المرور الحالية<input type="password" name="current" autocomplete="current-password" /></label>' +
+        '<label class="f">كلمة المرور الجديدة (8 أحرف على الأقل)<input type="password" name="next" autocomplete="new-password" /></label>' +
+        '</div><div class="btn-row"><button class="btn-a btn-ink" type="submit">تغيير كلمة المرور</button></div>' +
+        '<div class="msg" id="passMsg" role="status"></div></form>' +
+        '<h2 style="margin-top:30px">النسخة الاحتياطية</h2>' +
+        '<p class="hint" style="margin-top:0">تحميل ملف JSON يحتوي على كل البيانات: الفنانون والمنتجات والأسعار والطلبات والتقييمات والإعدادات. لا يشمل الملفات المرفوعة (الصور والأعمال الصوتية والفيديو).</p>' +
+        '<div class="btn-row"><button class="btn-a btn-ink" type="button" id="backupBtn">تحميل نسخة احتياطية</button></div>' +
+        '<div class="msg" id="backupMsg" role="status"></div></section>';
+      return el.firstChild;
+    }
+    function fillSettings() {
+      var f = $("#settingsForm"); if (!f || !S.data || !S.data.settings) return;
+      if (f.dataset.dirty === "1") return;
+      f.whatsapp.value = S.data.settings.whatsapp || "";
+      f.standardHours.value = S.data.settings.deliveryHours.standard;
+      f.expressHours.value = S.data.settings.deliveryHours.express;
+      var soc = S.data.settings.social || {};
+      ["instagram", "tiktok", "snapchat", "youtube", "x", "facebook"].forEach(function (k) { f["social_" + k].value = soc[k] || ""; });
+    }
+
+    /* ---------- بناء الواجهة كاملة ---------- */
+    function buildAll() {
+      var tabs = $("#tabs"), panels = $("#panels");
+      tabs.innerHTML = ORDER.map(function (k) { return '<button type="button" role="tab" data-tab="' + k + '">' + LABELS[k] + '</button>'; }).join("");
+      panels.appendChild(buildOrdersPanel());
+      Object.keys(COLS).forEach(function (k) {
+        buildPanel(k).forEach(function (n) { panels.appendChild(n); });
+      });
+      panels.appendChild(buildSettingsPanel());
+      var help = document.createElement("div");
+      help.innerHTML = '<section class="card hidden" data-panel="help"><h2>كيف أدير الموقع؟</h2>' +
+        '<ol style="line-height:2">' +
+        '<li><strong>الأسعار:</strong> من «المنتجات والأسعار» أو «الباقات» أو «الإضافات». يمكنك تغيير السعر مباشرة من الجدول، وتتحدّث الأسعار في الموقع والطلبات فوراً.</li>' +
+        '<li><strong>الفنانون:</strong> أضف الاسم والنبذة وصورة اختيارية. اختر «تعديل» لتغيير أي بيانات أو الصورة.</li>' +
+        '<li><strong>أعمالنا:</strong> ارفع صورة أو مقطع صوت (MP3 أو WAV أو OGG أو M4A) أو فيديو (MP4 أو WebM)، واختر المنشد والمناسبة، وأضف صورة غلاف اختيارية للصوت والفيديو.</li>' +
+        '<li><strong>الحذف:</strong> لا يمكن حذف فنان أو مناسبة مرتبطة بمنتجات أو أعمال؛ انقلها أولاً ثم احذف.</li>' +
+        '<li><strong>الطلبات:</strong> غيّر حالة الطلب من القائمة، ويراها العميل عند التتبّع برقم الطلب.</li>' +
+        '<li><strong>الإعدادات:</strong> رقم واتساب ومدة التسليم.</li>' +
+        '<li><strong>الصور:</strong> JPG أو PNG أو WebP، وحتى 30 ميغابايت للملف. اضغط الفيديوهات الكبيرة قبل رفعها لتحميل أسرع.</li>' +
+        '</ol><p class="hint">الأقسام الرئيسية في القائمة (شيلات، زفات، ألحان الشيلات) ثابتة في ملف data.js، أما المنتجات والأسعار فتُدار من هذه اللوحة.</p></section>';
+      panels.appendChild(help.firstChild);
+      bindStatic();
+    }
+
+    /* ---------- الأحداث ---------- */
+    function showTab(key) {
+      $$("#tabs [data-tab]").forEach(function (b) { var on = b.getAttribute("data-tab") === key; b.classList.toggle("on", on); b.setAttribute("aria-selected", on ? "true" : "false"); });
+      $$("#panels [data-panel]").forEach(function (p) { p.classList.toggle("hidden", p.getAttribute("data-panel") !== key); });
+    }
+    function bindStatic() {
+      $("#passForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var f = e.currentTarget, msgEl = $("#passMsg"), btn = f.querySelector("button[type=submit]");
+        if (f.next.value.length < 8) { setMsg(msgEl, "كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل"); return; }
+        if (f.next.value !== f.next.value.trim()) { setMsg(msgEl, "كلمة المرور لا تبدأ أو تنتهي بمسافة"); return; }
+        btn.disabled = true;
+        api("/api/admin/password", { method: "PUT", body: { current: f.current.value, next: f.next.value } })
+          .then(function () { f.reset(); setMsg(msgEl, "تم التغيير. سجّل الدخول بكلمة المرور الجديدة.", true); setTimeout(function () { logout(""); }, 1500); })
+          .catch(function (err) { setMsg(msgEl, err.message); })
+          .then(function () { btn.disabled = false; });
+      });
+      $("#backupBtn").addEventListener("click", function () {
+        var msgEl = $("#backupMsg"), token = S.token || "";
+        fetch("/api/admin/backup", { headers: { "X-Admin-Token": token }, cache: "no-store" }).then(function (r) {
+          if (!r.ok) throw new Error("تعذّر تحميل النسخة الاحتياطية، سجّل الدخول مجدداً");
+          return r.blob();
+        }).then(function (blob) {
+          var a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+          a.download = "alhan-backup-" + new Date().toISOString().slice(0, 10) + ".json";
+          document.body.appendChild(a); a.click(); a.remove();
+          setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+          setMsg(msgEl, "تم تحميل النسخة الاحتياطية.", true);
+        }).catch(function (err) { setMsg(msgEl, err.message); });
+      });
+      $("#tabs").addEventListener("click", function (e) { var b = e.target.closest("[data-tab]"); if (b) showTab(b.getAttribute("data-tab")); });
+      Object.keys(COLS).forEach(bindCollection);
+      $("#settingsForm").addEventListener("input", function (e) { e.currentTarget.dataset.dirty = "1"; });
+      $("#settingsForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var f = e.target, msgEl = $("#settingsMsg"), btn = f.querySelector("button[type=submit]");
+        btn.disabled = true;
+        var social = {};
+        ["instagram", "tiktok", "snapchat", "youtube", "x", "facebook"].forEach(function (k) { social[k] = f["social_" + k].value.trim(); });
+        api("/api/admin/settings", { method: "PUT", body: { whatsapp: f.whatsapp.value, standardHours: f.standardHours.value, expressHours: f.expressHours.value, social: social } })
+          .then(function () { f.dataset.dirty = ""; setMsg(msgEl, "تم حفظ الإعدادات.", true); return load(); })
+          .catch(function (err) { setMsg(msgEl, err.message); })
+          .then(function () { btn.disabled = false; });
+      });
+      $("#ordersBody").addEventListener("change", function (e) {
+        var s = e.target.closest("[data-status]"); if (!s) return;
+        api("/api/admin/orders/" + encodeURIComponent(s.getAttribute("data-status")) + "/status", { method: "POST", body: { status: s.value } })
+          .then(function () { setMsg($("#ordersMsg"), "تم تحديث حالة الطلب.", true); return load(); })
+          .catch(function (err) { setMsg($("#ordersMsg"), err.message); });
+      });
+      // تعديل السعر مباشرة من الجدول
+      document.addEventListener("change", function (e) {
+        var inp = e.target.closest && e.target.closest("[data-inline]"); if (!inp) return;
+        var key = inp.closest("[data-panel]").getAttribute("data-panel"), field = inp.getAttribute("data-inline"), id = inp.getAttribute("data-id");
+        var body = {}; body[field] = inp.value;
+        inp.disabled = true;
+        api("/api/admin/" + COLS[key].endpoint + "/" + encodeURIComponent(id), { method: "PUT", body: body })
+          .then(function () { inp.classList.add("saved"); setTimeout(function () { inp.classList.remove("saved"); }, 1500); setMsg(UI[key].listmsg, "تم تحديث السعر.", true); return load(true); })
+          .catch(function (err) { setMsg(UI[key].listmsg, err.message); return load(true); })
+          .then(function () { inp.disabled = false; });
+      });
+    }
+    function bindLogin() {
+      $("#loginForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        var pw = $("#adminPass").value;
+        if (!pw) { setMsg($("#loginMsg"), "أدخل كلمة المرور"); return; }
+        api("/api/admin/login", { method: "POST", body: { password: pw } }).then(function (d) {
+          S.token = d.token; sessionStorage.setItem(TOKEN_KEY, d.token);
+          $("#adminPass").value = ""; setMsg($("#loginMsg"), "");
+          return load();
+        }).catch(function (err) { setMsg($("#loginMsg"), err.message); });
+      });
+      $("#logoutBtn").addEventListener("click", function () {
+        api("/api/admin/logout", { method: "POST" }).catch(function () {}).then(function () { logout(""); });
+      });
+    }
+    function bindCollection(key) {
+      var ui = UI[key], cfg = COLS[key];
+      ui.form.addEventListener("submit", function (e) {
+        e.preventDefault();
+        var form = ui.form, body = {}, editId = ui.editId;
+        ui.save.disabled = true; setMsg(ui.msg, "جارٍ الحفظ...", true);
+        var jobs = [];
+        cfg.fields.forEach(function (f) {
+          var el = form.elements[f.k]; if (!el) return;
+          if (f.t === "bool") { body[f.k] = el.checked; return; }
+          if (f.t === "image" || f.t === "media") {
+            if (el.files && el.files[0]) jobs.push(readFile(el.files[0]).then(function (d) { body[f.k] = d; }));
+            return;
+          }
+          if (el.disabled) return;
+          body[f.k] = el.value;
+        });
+        Promise.all(jobs).then(function () {
+          var path = "/api/admin/" + cfg.endpoint + (editId ? "/" + encodeURIComponent(editId) : "");
+          return api(path, { method: editId ? "PUT" : "POST", body: body });
+        }).then(function () {
+          setMsg(ui.msg, editId ? "تم حفظ التعديلات." : "تمت الإضافة بنجاح.", true);
+          resetForm(key);
+          return load(true);
+        }).catch(function (err) {
+          setMsg(ui.msg, err.message);
+        }).then(function () { ui.save.disabled = false; });
+      });
+      ui.cancel.addEventListener("click", function () { resetForm(key); setMsg(ui.msg, ""); });
+      if (key === "works") {
+        var typeSel = ui.form.elements.type, fileIn = ui.form.elements.file;
+        typeSel.addEventListener("change", function () { fileIn.setAttribute("accept", ACCEPT[typeSel.value] || ""); });
+        fileIn.setAttribute("accept", ACCEPT.image);
+      }
+      // أحداث الجدول: تعديل وحذف
+      ui.body.addEventListener("click", function (e) {
+        var ap = e.target.closest("[data-approve]");
+        if (ap) {
+          api("/api/admin/reviews/" + encodeURIComponent(ap.getAttribute("data-approve")), { method: "PUT", body: { status: "approved" } })
+            .then(function () { setMsg(ui.listmsg, "تم اعتماد التقييم وسيظهر في الموقع.", true); return load(true); })
+            .catch(function (err) { setMsg(ui.listmsg, err.message); });
+          return;
+        }
+        var ed = e.target.closest("[data-edit]"), dl = e.target.closest("[data-del]");
+        if (ed) {
+          var rec = byId(S.data[cfg.list], ed.getAttribute("data-id")); if (!rec) return;
+          fillForm(key, rec);
+          ui.form.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+        if (dl) {
+          var rec2 = byId(S.data[cfg.list], dl.getAttribute("data-id"));
+          var label = rec2 ? (rec2.title || rec2.name || rec2.label || rec2.q || "") : "";
+          if (!confirm("حذف «" + label + "» نهائياً؟")) return;
+          api("/api/admin/" + cfg.endpoint + "/" + encodeURIComponent(dl.getAttribute("data-id")), { method: "DELETE" })
+            .then(function () { if (ui.editId === dl.getAttribute("data-id")) resetForm(key); setMsg(ui.listmsg, "تم الحذف.", true); return load(true); })
+            .catch(function (err) { setMsg(ui.listmsg, err.message); });
+        }
+      });
+    }
+    function fillForm(key, rec) {
+      var cfg = COLS[key], ui = UI[key], form = ui.form;
+      ui.editId = rec.id;
+      cfg.fields.forEach(function (f) {
+        var el = form.elements[f.k]; if (!el) return;
+        var v = rec[f.k];
+        if (f.t === "bool") el.checked = !!v;
+        else if (f.t === "tags") el.value = (v || []).join("، ");
+        else if (f.t === "lines") el.value = (v || []).join("\n");
+        else if (f.t === "image" || f.t === "media") {
+          el.value = "";
+          var pv = form.querySelector('[data-preview="' + f.k + '"]');
+          if (pv) pv.innerHTML = f.t === "media" ? "الملف الحالي: " + esc(rec.src || "") : (v ? '<img src="' + esc(v) + '" alt="" /> الصورة الحالية (اختر ملفاً لاستبدالها)' : "لا توجد صورة");
+        }
+        else el.value = v == null ? "" : v;
+      });
+      if (form.elements.type && rec.type) { form.elements.type.disabled = true; }
+      if (key === "works") form.elements.file.setAttribute("accept", ACCEPT[rec.type] || "");
+      ui.title.textContent = "تعديل: " + (rec.title || rec.name || rec.label || rec.q || "");
+      ui.save.textContent = "حفظ التعديلات";
+      ui.cancel.hidden = false;
+      ui.form.classList.add("editing");
+      setMsg(ui.msg, "");
+    }
+    function resetForm(key) {
+      var cfg = COLS[key], ui = UI[key], form = ui.form;
+      form.reset();
+      ui.editId = "";
+      cfg.fields.forEach(function (f) {
+        if (f.t === "image" || f.t === "media") { var pv = form.querySelector('[data-preview="' + f.k + '"]'); if (pv) pv.innerHTML = ""; }
+        if (f.t === "select" && form.elements[f.k]) form.elements[f.k].disabled = false;
+      });
+      if (key === "works") form.elements.file.setAttribute("accept", ACCEPT.image);
+      ui.title.textContent = "إضافة " + cfg.label + " جديد";
+      ui.save.textContent = "إضافة";
+      ui.cancel.hidden = true;
+      ui.form.classList.remove("editing");
+    }
+
+    /* ---------- التحميل والجلسة ---------- */
+    function load(tablesOnly) {
+      return api("/api/admin/summary").then(function (d) {
+        S.data = d;
+        $("#serverBanner").classList.remove("show");
+        showApp(true);
+        renderOrders();
+        Object.keys(COLS).forEach(function (k) { renderTable(k); refreshSelects(k); });
+        fillSettings();
+      }).catch(function (err) {
+        if (S.token && /انتهت|تسجيل/.test(err.message)) { showApp(false); return; }
+        if (!S.token) return;
+        setMsg($("#loginMsg"), err.message);
+        showApp(false);
+      });
+    }
+    function showApp(on) {
+      $("#loginCard").classList.toggle("hidden", on);
+      $("#app").classList.toggle("hidden", !on);
+      $("#logoutBtn").classList.toggle("hidden", !on);
+      $("#whoLine").textContent = on ? "متصل كمدير" : "";
+      if (on && !$("#tabs").children.length) buildAll();
+      if (on && !$(".tabs .on")) showTab("orders");
+      if (on) { var ordersTab = $("#tabs [data-tab='orders']"); if (ordersTab && !$("#tabs .on")) showTab("orders"); }
+    }
+    function logout(text) {
+      S.token = ""; sessionStorage.removeItem(TOKEN_KEY);
+      showApp(false);
+      if (text) setMsg($("#loginMsg"), text);
+    }
+    function checkServer() {
+      fetch("/api/content", { cache: "no-store" }).then(function (r) {
+        var isJson = (r.headers.get("content-type") || "").indexOf("application/json") !== -1;
+        var b = $("#serverBanner");
+        if (!isJson) { b.textContent = NOT_SERVER; b.classList.add("show"); }
+      }).catch(function () {
+        var b = $("#serverBanner"); b.textContent = "تعذّر الوصول إلى الخادم. تأكد من تشغيل server.js."; b.classList.add("show");
+      });
+    }
+    bindLogin();
+    if (S.token) load(); else checkServer();
+  })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,410 @@
+{
+  "artists": [
+    {
+      "id": "a1",
+      "name": "المنشد سالم العتيبي",
+      "initials": "س ع",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "a2",
+      "name": "المنشد ماجد الحربي",
+      "initials": "م ح",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "a3",
+      "name": "المنشد عبدالله الشهري",
+      "initials": "ع ش",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "a4",
+      "name": "المنشد فهد القحطاني",
+      "initials": "ف ق",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "a5",
+      "name": "المنشد خالد الغامدي",
+      "initials": "خ غ",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "a6",
+      "name": "المنشد ناصر الدوسري",
+      "initials": "ن د",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "a7",
+      "name": "المنشدة لينا الزهراني",
+      "initials": "ل ز",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "a8",
+      "name": "المنشد يوسف المالكي",
+      "initials": "ي م",
+      "bio": "",
+      "photo": "",
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "p1",
+      "title": "شيلة زواج باسم خالد — ليلة فرح",
+      "cat": "shilat-wedding",
+      "img": "assets/prod-p1.jpg",
+      "artist": "a1",
+      "price": 575,
+      "oldPrice": 900,
+      "duration": "02:26",
+      "sales": 175,
+      "tags": [
+        "قابل للتعديل",
+        "الأكثر طلباً"
+      ],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p2",
+      "title": "زفة عريس باسم فيصل — زواج الشهم",
+      "cat": "zaffa-groom",
+      "img": "assets/prod-p2.jpg",
+      "artist": "a2",
+      "price": 625,
+      "oldPrice": 875,
+      "duration": "02:40",
+      "sales": 120,
+      "tags": [
+        "الأكثر طلباً"
+      ],
+      "isNew": true,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p3",
+      "title": "شيلة تخرج باسم غلا — افرحي يابنيتي",
+      "cat": "shilat-grad-girls",
+      "img": "assets/prod-p3.jpg",
+      "artist": "a3",
+      "price": 625,
+      "oldPrice": 950,
+      "duration": "02:15",
+      "sales": 98,
+      "tags": [
+        "قابل للتعديل"
+      ],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p4",
+      "title": "زفة عروس — اقبلت احلى عروس",
+      "cat": "zaffa-bride",
+      "img": "assets/prod-p4.jpg",
+      "artist": "a4",
+      "price": 575,
+      "oldPrice": 1000,
+      "duration": "02:31",
+      "sales": 88,
+      "tags": [
+        "جديد"
+      ],
+      "isNew": true,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p5",
+      "title": "شيلة تخرج ضابط — يوم تخريجه",
+      "cat": "shilat-grad-boys",
+      "img": "assets/prod-p5.jpg",
+      "artist": "a5",
+      "price": 625,
+      "oldPrice": 875,
+      "duration": "02:20",
+      "sales": 70,
+      "tags": [],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p6",
+      "title": "زفة مولود — عطانا الله",
+      "cat": "zaffa-birth",
+      "img": "assets/prod-p6.jpg",
+      "artist": "a6",
+      "price": 625,
+      "oldPrice": 950,
+      "duration": "02:05",
+      "sales": 43,
+      "tags": [
+        "قابل للتعديل"
+      ],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p7",
+      "title": "شيلة أم العروس — بنت الشيوخ",
+      "cat": "shilat-groom",
+      "img": "assets/prod-p7.jpg",
+      "artist": "a7",
+      "price": 625,
+      "oldPrice": 850,
+      "duration": "02:18",
+      "sales": 39,
+      "tags": [
+        "الأكثر طلباً"
+      ],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p8",
+      "title": "زفة مسار — شمس الكواكب",
+      "cat": "zaffa-masar",
+      "img": "assets/prod-p8.jpg",
+      "artist": "a8",
+      "price": 575,
+      "oldPrice": 850,
+      "duration": "02:36",
+      "sales": 40,
+      "tags": [],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p9",
+      "title": "شيلة تقاعد — عمر العطاء",
+      "cat": "shilat-retire",
+      "img": "assets/prod-p9.jpg",
+      "artist": "a2",
+      "price": 575,
+      "oldPrice": 900,
+      "duration": "02:12",
+      "sales": 22,
+      "tags": [
+        "جديد"
+      ],
+      "isNew": true,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p10",
+      "title": "شيلة عروس باسم رهف — شيخة زمنها",
+      "cat": "shilat-bride",
+      "img": "assets/prod-p10.jpg",
+      "artist": "a3",
+      "price": 625,
+      "oldPrice": 850,
+      "duration": "02:22",
+      "sales": 43,
+      "tags": [
+        "قابل للتعديل"
+      ],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p11",
+      "title": "زفة أم العروس — تم الفرح",
+      "cat": "zaffa-mother",
+      "img": "assets/cat-wedding.jpg",
+      "artist": "a4",
+      "price": 575,
+      "oldPrice": 1000,
+      "duration": "02:28",
+      "sales": 37,
+      "tags": [],
+      "isNew": false,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    },
+    {
+      "id": "p12",
+      "title": "أغنية كوشة — ليلة العمر",
+      "cat": "koshah",
+      "img": "assets/cat-koshah.jpg",
+      "artist": "a1",
+      "price": 750,
+      "oldPrice": 1200,
+      "duration": "03:05",
+      "sales": 19,
+      "tags": [
+        "حصري"
+      ],
+      "isNew": true,
+      "createdAt": "2026-10-11T18:56:40.371Z"
+    }
+  ],
+  "packages": [
+    {
+      "id": "basic",
+      "name": "الاقتصادية",
+      "price": 200,
+      "desc": "زفة بالاسم بصوت من فريقنا، بدون موسيقى إضافية.",
+      "features": [
+        "اسم واحد أو اثنان",
+        "صوت من فريق الأداء",
+        "ملف MP3 عالي الجودة",
+        "تسليم خلال 72 ساعة"
+      ],
+      "popular": false
+    },
+    {
+      "id": "standard",
+      "name": "القياسية",
+      "price": 350,
+      "desc": "الباقة الأكثر طلباً: موسيقى جاهزة مع الاسم والترحيب.",
+      "features": [
+        "أسماء متعددة",
+        "موسيقى جاهزة من مكتبتنا",
+        "ترحيب بالضيوف",
+        "ملف MP3 + نسخة للهاتف"
+      ],
+      "popular": true
+    },
+    {
+      "id": "premium",
+      "name": "المميزة",
+      "price": 550,
+      "desc": "كلمات مكتوبة خصيصاً لكم مع موسيقى حصرية.",
+      "features": [
+        "كلمات مخصصة بالكامل",
+        "موسيقى حصرية",
+        "مونتاج احترافي",
+        "نسخة قصيرة للسوشيال ميديا"
+      ],
+      "popular": false
+    }
+  ],
+  "addons": [
+    {
+      "id": "express",
+      "label": "تسليم عاجل خلال 24 ساعة",
+      "price": 150
+    },
+    {
+      "id": "short",
+      "label": "نسخة قصيرة (30 ثانية) للسوشيال",
+      "price": 50
+    },
+    {
+      "id": "hq",
+      "label": "ملف WAV عالي الدقة",
+      "price": 30
+    },
+    {
+      "id": "video",
+      "label": "فيديو جاهز بصورة العروسين",
+      "price": 120
+    }
+  ],
+  "occasions": [
+    {
+      "id": "wedding-groom",
+      "label": "زفة عريس",
+      "img": "assets/cat-wedding.jpg"
+    },
+    {
+      "id": "wedding-bride",
+      "label": "زفة عروس",
+      "img": "assets/cat-wedding.jpg"
+    },
+    {
+      "id": "mother-bride",
+      "label": "زفة أم العروس",
+      "img": "assets/cat-wedding.jpg"
+    },
+    {
+      "id": "koshah",
+      "label": "أغنية كوشة",
+      "img": "assets/cat-koshah.jpg"
+    },
+    {
+      "id": "talla",
+      "label": "موسيقى طلة",
+      "img": "assets/cat-talla.jpg"
+    },
+    {
+      "id": "graduation",
+      "label": "تخرج",
+      "img": "assets/cat-graduation.jpg"
+    },
+    {
+      "id": "birth",
+      "label": "مولود جديد",
+      "img": "assets/cat-birth.jpg"
+    },
+    {
+      "id": "birthday",
+      "label": "عيد ميلاد",
+      "img": "assets/cat-birthday.jpg"
+    },
+    {
+      "id": "retirement",
+      "label": "تقاعد",
+      "img": "assets/cat-retirement.jpg"
+    },
+    {
+      "id": "other",
+      "label": "مناسبة أخرى",
+      "img": "assets/cat-other.jpg"
+    }
+  ],
+  "reviews": [],
+  "faqs": [
+    {
+      "id": "f1",
+      "q": "كم يستغرق تنفيذ الطلب؟",
+      "a": "مدة التسليم تظهر في ملخص طلبك قبل الإرسال: التسليم القياسي خلال 72 ساعة، والعاجل خلال 24 ساعة."
+    },
+    {
+      "id": "f2",
+      "q": "هل يمكنني تعديل الاسم بعد التنفيذ؟",
+      "a": "نعم. تواصل معنا على واتساب مع رقم طلبك قبل التسليم، وسنراجع التعديل معك."
+    },
+    {
+      "id": "f3",
+      "q": "كيف أدفع ثمن الطلب؟",
+      "a": "يُؤكَّد الطلب بعد إرساله عبر واتساب، وتوضح لك رسالة التأكيد طريقة الدفع المتاحة."
+    },
+    {
+      "id": "f4",
+      "q": "ما الذي تتضمنه المعاينة في صفحة المنتج؟",
+      "a": "صفحة المنتج تعرض وصفه وسعره ومنشده. للاستماع إلى أعمال منفذة فعلاً، انظر قسم أعمالنا."
+    },
+    {
+      "id": "f5",
+      "q": "كيف أستلم الملف؟",
+      "a": "يُرسل الملف النهائي إلى رقم الواتساب الذي أدخلته في الطلب."
+    }
+  ],
+  "works": [],
+  "orders": [],
+  "settings": {
+    "whatsapp": "967779000996",
+    "deliveryHours": {
+      "standard": 72,
+      "express": 24
+    },
+    "social": {}
+  }
+}
